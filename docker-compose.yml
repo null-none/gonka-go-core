@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  gonka-node:
+    build: ./node
+    container_name: gonka-node
+    ports:
+      - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - gonka-net
+
+  gonka-cli:
+    image: golang:1.22-alpine
+    container_name: gonka-cli
+    volumes:
+      - ./cli:/app
+    working_dir: /app
+    tty: true
+    networks:
+      - gonka-net
+    depends_on:
+      - gonka-node
+
+networks:
+  gonka-net:
+    driver: bridge
